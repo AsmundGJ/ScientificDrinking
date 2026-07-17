@@ -1,9 +1,11 @@
 {
-  "name": "pace",
-  "short_name": "pace",
+  "name": "Pace",
+  "short_name": "Pace",
   "display": "standalone",
   "scope": "./",
   "start_url": "./",
+  "background_color": "#0e1117",
+  "theme_color": "#0e1117",
   "icons": [
     {
       "src": "icons/icon-72x72.png",

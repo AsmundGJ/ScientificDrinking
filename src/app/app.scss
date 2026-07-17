@@ -1,0 +1,57 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.topnav {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--line);
+
+  .brand {
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  a {
+    color: var(--dim);
+    text-decoration: none;
+    padding: 0.25rem 0.5rem;
+    border-radius: 6px;
+
+    &.active {
+      color: var(--text);
+      background: var(--panel);
+    }
+  }
+
+  .spacer {
+    flex: 1;
+  }
+
+  .gear {
+    font-size: 1.1rem;
+  }
+}
+
+.page {
+  flex: 1;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.disclaimer {
+  padding: 0.6rem 1rem;
+  border-top: 1px solid var(--line);
+  color: var(--dim);
+  font-size: 0.75rem;
+  text-align: center;
+}
