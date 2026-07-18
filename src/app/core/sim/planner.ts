@@ -276,7 +276,7 @@ export function standardDaySchedule(
 
 export interface StandardFestivalDay extends LiftSchedule {
   meals: { atMs: Millis; templateId: string }[];
-  hydrations: { atMs: Millis; ml: number }[];
+  hydrations: { atMs: Millis; ml: number; electrolytes?: boolean }[];
 }
 
 /**
@@ -311,7 +311,13 @@ export function standardFestivalDay(
     const t = byFullness(f);
     return t ? [{ atMs: h(hh), templateId: t.id }] : [];
   });
-  const hydrations = [9, 12, 14, 16.25, 18, 20, 23].map((hh) => ({ atMs: h(hh), ml: 500 }));
+  // The last water of the night carries electrolytes — the one that fights
+  // tomorrow morning hardest.
+  const hydrations = [9, 12, 14, 16.25, 18, 20, 23].map((hh) => ({
+    atMs: h(hh),
+    ml: 500,
+    electrolytes: hh === 23,
+  }));
   return { ...lifts, meals, hydrations };
 }
 

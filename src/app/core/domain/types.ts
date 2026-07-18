@@ -82,7 +82,7 @@ export interface DayPlan {
   anchors: Anchor[];
   meals: { atMs: Millis; templateId: string }[];
   /** Planned water moments — shown as their own markers on the timeline. */
-  hydrations: { atMs: Millis; ml: number }[];
+  hydrations: { atMs: Millis; ml: number; electrolytes?: boolean }[];
   sleep: { fromMs: Millis; toMs: Millis };
   /** Hard cap on any projected peak. No UI path may raise it mid-day. */
   ceilingPermille: number;

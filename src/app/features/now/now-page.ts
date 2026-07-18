@@ -94,6 +94,7 @@ interface EditDraft {
           <button class="btn-big btn-primary" (click)="logDrink(top)">+1 {{ top.emoji }}</button>
         }
         <button class="btn-big" (click)="logWater()">+ water</button>
+        <button class="btn-big" (click)="logElectrolyteWater()">+ water ⚡</button>
         <button class="btn-big" (click)="foodOpen.set(!foodOpen())">+ food</button>
         <button class="btn-big" (click)="sleepOpen.set(!sleepOpen())">+ sleep</button>
       </div>
@@ -631,6 +632,11 @@ export class NowPage {
   logWater(): void {
     const id = this.store.logWater();
     this.showUndo({ id, label: '+0.5 L water', kind: 'water' });
+  }
+
+  logElectrolyteWater(): void {
+    const id = this.store.logWater(500, true);
+    this.showUndo({ id, label: '+0.5 L water ⚡', kind: 'water' });
   }
 
   logFood(fullness: Fullness): void {

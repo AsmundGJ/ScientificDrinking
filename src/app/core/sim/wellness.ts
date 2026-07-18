@@ -121,7 +121,8 @@ export function wellnessProjection(
   for (const e of app.log) {
     if (!('atMs' in e) || e.atMs < fromMs || e.atMs > nowMs) continue;
     if (e.kind === 'drink') past.drinks.push({ atMs: e.atMs, grams: gramsForLoggedDrink(e, app.presets) });
-    else if (e.kind === 'water') past.waters.push({ atMs: e.atMs, ml: e.ml });
+    // Electrolytes improve retention — count that water ~20% more effective.
+    else if (e.kind === 'water') past.waters.push({ atMs: e.atMs, ml: e.ml * (e.electrolytes ? 1.2 : 1) });
     else if (e.kind === 'food') past.foods.push({ atMs: e.atMs, fullness: e.fullness });
   }
   const pastRes = wellnessSeries(WELLNESS_NEUTRAL, past, fromMs, nowMs);
@@ -132,7 +133,10 @@ export function wellnessProjection(
     foods: [],
   };
   for (const day of app.plan) {
-    for (const hy of day.hydrations) if (hy.atMs > nowMs) future.waters.push({ atMs: hy.atMs, ml: hy.ml });
+    for (const hy of day.hydrations) {
+      // Same electrolyte bonus as logged water: ~20% better retention.
+      if (hy.atMs > nowMs) future.waters.push({ atMs: hy.atMs, ml: hy.ml * (hy.electrolytes ? 1.2 : 1) });
+    }
     for (const m of day.meals) {
       if (m.atMs <= nowMs) continue;
       const tpl = app.mealTemplates.find((t) => t.id === m.templateId);

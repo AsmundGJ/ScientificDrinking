@@ -41,6 +41,7 @@ interface HydrateRow {
   kind: 'hydrate';
   time: string;
   ml: number;
+  electrolytes: boolean;
 }
 type EvRow = AnchorRow | MealRow | HydrateRow;
 
@@ -127,6 +128,7 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
               @case ('hydrate') {
                 <span class="tag hydrate">hydrate</span>
                 <label><input type="number" [(ngModel)]="row.ml" min="100" max="2000" step="100" /> ml</label>
+                <label title="Electrolytes"><input type="checkbox" [(ngModel)]="row.electrolytes" /> ⚡</label>
                 <span class="main"></span>
               }
             }
@@ -457,6 +459,7 @@ export class PlanDayPage {
         kind: 'hydrate' as const,
         time: msToTimeInput(hy.atMs),
         ml: hy.ml,
+        electrolytes: hy.electrolytes ?? false,
         atMs: hy.atMs,
       })),
     ];
@@ -479,7 +482,7 @@ export class PlanDayPage {
   }
 
   addHydrate(): void {
-    this.rows = [...this.rows, { kind: 'hydrate', time: '21:00', ml: 500 }];
+    this.rows = [...this.rows, { kind: 'hydrate', time: '21:00', ml: 500, electrolytes: false }];
   }
 
   removeRow(index: number): void {
@@ -509,7 +512,14 @@ export class PlanDayPage {
         (a): EvRow => ({ kind: 'anchor', id: uid(), time: msToTimeInput(a.atMs), label: a.label, units: a.units }),
       ),
       ...res.meals.map((m): EvRow => ({ kind: 'meal', time: msToTimeInput(m.atMs), templateId: m.templateId })),
-      ...res.hydrations.map((hy): EvRow => ({ kind: 'hydrate', time: msToTimeInput(hy.atMs), ml: hy.ml })),
+      ...res.hydrations.map(
+        (hy): EvRow => ({
+          kind: 'hydrate',
+          time: msToTimeInput(hy.atMs),
+          ml: hy.ml,
+          electrolytes: hy.electrolytes ?? false,
+        }),
+      ),
     ];
     this.rows = rows.sort((a, b) => dayTimeToMs(d.dateMs, a.time) - dayTimeToMs(d.dateMs, b.time));
     this.budget = res.totalPours;
@@ -528,7 +538,7 @@ export class PlanDayPage {
       } else if (row.kind === 'meal' && row.templateId) {
         meals.push({ atMs, templateId: row.templateId });
       } else if (row.kind === 'hydrate') {
-        hydrations.push({ atMs, ml: row.ml });
+        hydrations.push({ atMs, ml: row.ml, electrolytes: row.electrolytes });
       }
     }
     anchors.sort((a, b) => a.atMs - b.atMs);

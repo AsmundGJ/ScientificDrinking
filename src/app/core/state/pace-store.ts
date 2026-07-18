@@ -50,7 +50,12 @@ export class PaceStore {
 
   constructor() {
     this.ready = this.repo.load().then((s) => this._state.set(s));
-    setInterval(() => this.now.set(Date.now()), 30_000);
+    setInterval(() => this.now.set(Date.now()), 10_000);
+  }
+
+  /** Re-anchor the clock immediately — every interaction feels instant. */
+  private touchNow(): void {
+    this.now.set(Date.now());
   }
 
   // ── Logging (append-only; undo is the one exception, see StateRepository) ──
@@ -86,12 +91,14 @@ export class PaceStore {
   /** User-facing correction: delete a wrongly logged entry. */
   removeEntry(id: string): void {
     this._state.update((s) => ({ ...s, log: s.log.filter((e) => e.id !== id) }));
+    this.touchNow();
     void this.repo.removeEntry(id);
   }
 
   /** User-facing correction: replace an entry (matched by id) with an edited one. */
   updateEntry(entry: LogEntry): void {
     this._state.update((s) => ({ ...s, log: s.log.map((e) => (e.id === entry.id ? entry : e)) }));
+    this.touchNow();
     void this.repo.replaceEntry(entry);
   }
 
@@ -101,6 +108,7 @@ export class PaceStore {
       ...s,
       log: s.log.map((e) => (e.id === id && 'atMs' in e ? { ...e, atMs: e.atMs + deltaMs } : e)),
     }));
+    this.touchNow();
     void this.repo.shiftEntryTime(id, deltaMs);
   }
 
@@ -289,6 +297,7 @@ export class PaceStore {
 
   private appendEntry(entry: LogEntry): string {
     this._state.update((s) => ({ ...s, log: [...s.log, entry] }));
+    this.touchNow();
     void this.repo.append(entry);
     return entry.id;
   }

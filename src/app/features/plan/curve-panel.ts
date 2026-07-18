@@ -90,12 +90,12 @@ const BAND_BOTTOM = 394;
         </g>
       }
 
-      <!-- hydrate ● with guide line -->
+      <!-- hydrate ● with guide line (⚡ = electrolytes, ringed) -->
       @for (hy of hydrateMarks(); track hy.atMs) {
         <g [attr.opacity]="hy.ghost ? 0.3 : 1">
           <line [attr.x1]="hy.x" [attr.x2]="hy.x" [attr.y1]="laneY + 20" [attr.y2]="plotBottom" class="guide" />
-          <circle [attr.cx]="hy.x" [attr.cy]="laneY + 16" r="4" class="hydrate">
-            <title>{{ hy.ml }} ml water</title>
+          <circle [attr.cx]="hy.x" [attr.cy]="laneY + 16" r="4" class="hydrate" [class.zap]="hy.electrolytes">
+            <title>{{ hy.ml }} ml water{{ hy.electrolytes ? ' ⚡ electrolytes' : '' }}</title>
           </circle>
         </g>
       }
@@ -233,6 +233,10 @@ const BAND_BOTTOM = 394;
     }
     .hydrate {
       fill: var(--blue);
+    }
+    .hydrate.zap {
+      stroke: var(--accent);
+      stroke-width: 1.5;
     }
     .plandrink {
       fill: var(--accent);
@@ -511,6 +515,7 @@ export class CurvePanel {
       .map((hy) => ({
         atMs: hy.atMs,
         ml: hy.ml,
+        electrolytes: hy.electrolytes ?? false,
         x: this.x(hy.atMs),
         ghost: this.ghost(hy.atMs, 'water'),
       })),
