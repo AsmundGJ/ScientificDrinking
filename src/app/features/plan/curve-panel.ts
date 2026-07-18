@@ -175,10 +175,25 @@ const BAND_BOTTOM = 394;
     </p>
   `,
   styles: `
+    :host {
+      display: block;
+    }
     svg {
       width: 100%;
       height: auto;
       display: block;
+    }
+    /* Phones: don't shrink the drawing into illegibility — keep it readable
+       and let it scroll sideways instead. */
+    @media (max-width: 700px) {
+      :host {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      svg {
+        width: 860px;
+        max-width: none;
+      }
     }
     .grid {
       stroke: var(--line);

@@ -180,8 +180,8 @@ interface EditDraft {
               <span class="what">{{ row.label }}</span>
               <span class="muted detail">{{ row.detail }}</span>
               <span class="spacer"></span>
-              <button (click)="startEdit(row.entry)">edit</button>
-              <button (click)="remove(row.entry.id)">remove</button>
+              <button class="small" (click)="startEdit(row.entry)">edit</button>
+              <button class="small x" (click)="remove(row.entry.id)" aria-label="Remove">✕</button>
             </div>
           }
         }
@@ -288,6 +288,17 @@ interface EditDraft {
       gap: 0.6rem;
       margin-top: 0.75rem;
     }
+    @media (max-width: 640px) {
+      .logbar {
+        flex-wrap: wrap;
+      }
+      .logbar .btn-big {
+        flex: 1 1 40%;
+      }
+      .bac {
+        font-size: 3.4rem;
+      }
+    }
     .presetrow {
       display: flex;
       gap: 0.5rem;
@@ -342,17 +353,30 @@ interface EditDraft {
       font-variant-numeric: tabular-nums;
       color: var(--dim);
       width: 3.2rem;
+      flex-shrink: 0;
+    }
+    .detail {
+      font-size: 0.8rem;
     }
     .spacer {
       flex: 1;
+    }
+    .small {
+      padding: 0.3rem 0.55rem;
+      font-size: 0.85rem;
+    }
+    .small.x {
+      color: var(--dim);
     }
     .editrow label {
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
+      white-space: nowrap;
     }
     .editrow input[type='number'] {
-      width: 5rem;
+      width: 4.2rem;
+      padding: 0.35rem 0.35rem;
     }
   `,
 })

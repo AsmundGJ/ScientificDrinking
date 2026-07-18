@@ -113,12 +113,12 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
             @switch (row.kind) {
               @case ('anchor') {
                 <span class="tag">anchor</span>
-                <input [(ngModel)]="row.label" placeholder="Label" />
-                <label>units <input type="number" [(ngModel)]="row.units" min="1" max="12" /></label>
+                <input class="main" [(ngModel)]="row.label" placeholder="Label" />
+                <label><input type="number" [(ngModel)]="row.units" min="1" max="12" /> u</label>
               }
               @case ('meal') {
                 <span class="tag meal">meal</span>
-                <select [(ngModel)]="row.templateId">
+                <select class="main" [(ngModel)]="row.templateId">
                   @for (t of store.mealTemplates(); track t.id) {
                     <option [value]="t.id">{{ t.label }} ({{ t.fullness }})</option>
                   }
@@ -126,11 +126,11 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
               }
               @case ('hydrate') {
                 <span class="tag hydrate">hydrate</span>
-                <label>ml <input type="number" [(ngModel)]="row.ml" min="100" max="2000" step="100" /></label>
+                <label><input type="number" [(ngModel)]="row.ml" min="100" max="2000" step="100" /> ml</label>
+                <span class="main"></span>
               }
             }
-            <span class="spacer"></span>
-            <button (click)="removeRow($index)">remove</button>
+            <button class="x" (click)="removeRow($index)" aria-label="Remove">✕</button>
           </div>
         }
 
@@ -213,17 +213,18 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
     }
     .row {
       display: flex;
-      gap: 0.6rem;
+      gap: 0.45rem;
       align-items: center;
       flex-wrap: wrap;
       padding: 0.3rem 0;
     }
     .tag {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       color: var(--accent);
-      width: 4rem;
+      width: 3.6rem;
+      flex-shrink: 0;
     }
     .tag.meal {
       color: var(--good);
@@ -232,16 +233,37 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
     .tag.sleep {
       color: var(--blue);
     }
+    /* The one flexible field per row — everything else stays compact so a
+       whole entry fits on a single phone-width line. */
+    .row .main {
+      flex: 1 1 5rem;
+      min-width: 0;
+    }
     .spacer {
       flex: 1;
     }
     .row label {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
+      white-space: nowrap;
     }
     .row input[type='number'] {
-      width: 5rem;
+      width: 4.2rem;
+      padding: 0.35rem 0.35rem;
+    }
+    .x {
+      padding: 0.35rem 0.55rem;
+      color: var(--dim);
+      flex-shrink: 0;
+    }
+    @media (max-width: 640px) {
+      .graphrow {
+        gap: 0.25rem;
+      }
+      .arrow {
+        padding: 0 0.4rem;
+      }
     }
     .danger {
       border-color: #a33;

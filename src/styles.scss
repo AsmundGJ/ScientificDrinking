@@ -75,6 +75,21 @@ select {
   border-radius: 8px;
   padding: 0.4rem 0.6rem;
   max-width: 100%;
+  box-sizing: border-box;
+}
+
+input[type='time'] {
+  width: 6rem;
+  padding: 0.35rem 0.3rem;
+}
+
+@media (max-width: 640px) {
+  .card {
+    padding: 0.7rem;
+  }
+  button {
+    padding: 0.45rem 0.65rem;
+  }
 }
 
 label {
