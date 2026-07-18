@@ -24,11 +24,15 @@ git commit -m "Pace: festival build + deploy workflow"
 git branch -M main            # optional: rename master → main
 ```
 
-Create a new repository on github.com (e.g. `pace`). It must be **public**
-(GitHub Pages on private repos needs a paid plan). Then:
+The repo must be **public** (GitHub Pages on private repos needs a paid plan).
+An existing repo works exactly as well as a new one — make it public under
+Settings → General → Danger Zone → "Change repository visibility". The repo
+name is irrelevant to the custom domain.
+
+If the remote isn't set up yet:
 
 ```bash
-git remote add origin git@github.com:<your-username>/pace.git
+git remote add origin git@github.com:<your-username>/<repo>.git
 git push -u origin main
 ```
 
