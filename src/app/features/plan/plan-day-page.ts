@@ -108,7 +108,7 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
         }
 
         @for (row of rows; track $index) {
-          <div class="row">
+          <div class="row ev">
             <input type="time" [(ngModel)]="row.time" />
             @switch (row.kind) {
               @case ('anchor') {
@@ -236,8 +236,12 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
     /* The one flexible field per row — everything else stays compact so a
        whole entry fits on a single phone-width line. */
     .row .main {
-      flex: 1 1 5rem;
+      flex: 1 1 0;
       min-width: 0;
+    }
+    /* Schedule entries NEVER wrap: the ✕ belongs to its own row. */
+    .row.ev {
+      flex-wrap: nowrap;
     }
     .spacer {
       flex: 1;
@@ -258,11 +262,32 @@ type EvRow = AnchorRow | MealRow | HydrateRow;
       flex-shrink: 0;
     }
     @media (max-width: 640px) {
+      /* Arrows move UNDER the graph so it gets the full width. */
       .graphrow {
-        gap: 0.25rem;
+        flex-wrap: wrap;
+        gap: 0.3rem;
       }
-      .arrow {
-        padding: 0 0.4rem;
+      .graphrow .grow {
+        order: -1;
+        flex: 1 1 100%;
+      }
+      .graphrow .arrow {
+        flex: 1;
+        padding: 0.4rem 0;
+      }
+      /* Tighter fixed widths so schedule entries fit one line. */
+      .row.ev {
+        gap: 0.3rem;
+      }
+      .ev input[type='time'] {
+        width: 5.2rem;
+      }
+      .ev .tag {
+        width: 2.9rem;
+        font-size: 0.58rem;
+      }
+      .ev input[type='number'] {
+        width: 3.4rem;
       }
     }
     .danger {

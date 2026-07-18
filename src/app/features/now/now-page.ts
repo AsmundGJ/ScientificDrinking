@@ -335,6 +335,22 @@ interface EditDraft {
       right: 0.5rem;
       font-size: 0.8rem;
     }
+    /* Must come AFTER the base .graphrow rules: equal specificity,
+       source order decides. Arrows move UNDER the graph on phones. */
+    @media (max-width: 640px) {
+      .graphrow {
+        flex-wrap: wrap;
+        gap: 0.3rem;
+      }
+      .graphrow .grow {
+        order: -1;
+        flex: 1 1 100%;
+      }
+      .graphrow .arrow {
+        flex: 1;
+        padding: 0.4rem 0;
+      }
+    }
     .card {
       margin-top: 1rem;
     }
