@@ -188,12 +188,18 @@ export function planDay(
       startMs += stepMs;
     }
 
-    const times = planDrinks(s, { fromMs: startMs, toMs: window.toMs }, budget, ceiling, p, foods, o);
+    // Overlapping anchors: this window may end before the cursor already is.
+    // Time only moves FORWARD — letting the cursor step back would simulate
+    // the same minutes twice, banking elimination that reality doesn't have
+    // (found by fast-check: three anchors within one minute breached the
+    // ceiling by exactly the double-counted decay).
+    const endMs = Math.max(startMs, window.toMs);
+    const times = planDrinks(s, { fromMs: startMs, toMs: endMs }, budget, ceiling, p, foods, o);
 
     // Advance the sim through the window with the allocated drinks on board.
     const events: DrinkEvent[] = times.map((atMs) => ({ atMs, grams: o.drinkGrams }));
-    s = simulate(s, startMs, window.toMs, p, events, foods, { dtH: o.dtH, collectPoints: false }).end;
-    cursorMs = window.toMs;
+    s = simulate(s, startMs, endMs, p, events, foods, { dtH: o.dtH, collectPoints: false }).end;
+    cursorMs = Math.max(cursorMs, endMs);
 
     remaining -= times.length;
     perTooth.push({ anchorId: anchor.id, times });

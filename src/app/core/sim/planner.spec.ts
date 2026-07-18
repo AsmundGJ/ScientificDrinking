@@ -187,6 +187,39 @@ describe('planDay — unit sizing and consecutive anchors (regressions)', () => 
     expect(sim.peakPermille).toBeLessThanOrEqual(0.7 + EPS);
   });
 
+  it('REGRESSION (CI seed -1875008925): overlapping anchors cannot ratchet past the ceiling', () => {
+    // Three anchors within one minute of each other made the planner cursor
+    // step backwards, double-counting elimination time.
+    const p: Profile = {
+      weightKg: 50,
+      heightCm: 166,
+      age: 18,
+      sex: 'male',
+      beta: 0.16420488223298613,
+      r: 0.8777300248138955,
+    };
+    const day: DayPlan = {
+      id: 'd',
+      dateMs: 0,
+      anchors: [
+        { id: 'a1', atMs: 7_260_000, label: 'A', units: 1 },
+        { id: 'a2', atMs: 7_200_000, label: 'B', units: 3 },
+        { id: 'a3', atMs: 7_260_000, label: 'C', units: 3 },
+      ],
+      meals: [],
+      hydrations: [],
+      sleep: { fromMs: 68_400_000, toMs: 104_400_000 },
+      ceilingPermille: 0.5,
+      minTroughPermille: 0.15,
+      dailyBudget: 3,
+    };
+    const res = planDay(day, ZERO_STATE, 0, 0.5, p);
+    const sim = simulate(ZERO_STATE, 0, 17 * MS_PER_HOUR, p, asDrinks(res.times), [], {
+      collectPoints: false,
+    });
+    expect(sim.peakPermille).toBeLessThanOrEqual(0.5 + EPS);
+  });
+
   it('consecutive anchors each get their own lift (trough gate yields, ceiling still rules)', () => {
     const day = mkDay([
       { atMs: 6 * MS_PER_HOUR, units: 4 },
