@@ -1,0 +1,3 @@
+# SPA fallback for Cloudflare Pages / Netlify (ignored by GitHub Pages,
+# which uses the 404.html copy made in the deploy workflow instead).
+/* /index.html 200

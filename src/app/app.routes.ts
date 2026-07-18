@@ -35,5 +35,9 @@ export const routes: Routes = [
     path: 'import',
     loadComponent: () => import('./features/import/import-page').then((m) => m.ImportPage),
   },
+  {
+    path: 'about',
+    loadComponent: () => import('./features/about/about-page').then((m) => m.AboutPage),
+  },
   { path: '**', redirectTo: 'now' },
 ];
